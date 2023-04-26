@@ -4,31 +4,67 @@
 
   vars:
     services_path: /home/ansible/docker-services/
-  
+
   tasks:
     - name: Create path if it doesn't exist
       become: true
       file:
         path: "{{ services_path }}"
         state: directory
-  
+
+    - name: Copy commons
+      become: true
+      copy:
+        src: ../common
+        dest: "{{ services_path }}"
+
+    - name: Ensure add_hosts.sh is executable
+      become: true
+      file:
+        path: "{{ services_path }}/common/add_hosts.sh"
+        mode: u+x,g+x,o+x
+
+    - name: Ensure stop.sh is executable
+      become: true
+      file:
+        path: "{{ services_path }}/common/stop.sh"
+        mode: u+x,g+x,o+x
+
+    - name: Ensure start.sh is executable
+      become: true
+      file:
+        path: "{{ services_path }}/common/start.sh"
+        mode: u+x,g+x,o+x
+
     - name: Copy gitea service
       become: true
       copy:
         src: ../gitea
-        dest: "{{ services_path }}/gitea"
+        dest: "{{ services_path }}"
+
+    - name: Copy goCD service
+      become: true
+      copy:
+        src: ../gocd
+        dest: "{{ services_path }}"
 
     - name: Copy nginx service
       become: true
       copy:
         src: ../nginx
-        dest: "{{ services_path }}/nginx"
-  
+        dest: "{{ services_path }}"
+
     - name: Start Gitea container using docker-compose
       become: true
       command: docker-compose up -d
       args:
         chdir: "{{ services_path }}/gitea"
+
+    - name: Start goCD container using docker-compose
+      become: true
+      command: docker-compose up -d
+      args:
+        chdir: "{{ services_path }}/gocd"
 
     - name: Start Nginx container using docker-compose
       become: true
