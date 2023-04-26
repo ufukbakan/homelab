@@ -1,0 +1,37 @@
+---
+- name: Copy docker-compose.yml and start services
+  hosts: ubuntu
+
+  vars:
+    services_path: /home/ansible/docker-services/
+  
+  tasks:
+    - name: Create path if it doesn't exist
+      become: true
+      file:
+        path: "{{ services_path }}"
+        state: directory
+  
+    - name: Copy gitea service
+      become: true
+      copy:
+        src: ../gitea
+        dest: "{{ services_path }}/gitea"
+
+    - name: Copy nginx service
+      become: true
+      copy:
+        src: ../nginx
+        dest: "{{ services_path }}/nginx"
+  
+    - name: Start Gitea container using docker-compose
+      become: true
+      command: docker-compose up -d
+      args:
+        chdir: "{{ services_path }}/gitea"
+
+    - name: Start Nginx container using docker-compose
+      become: true
+      command: docker-compose up -d
+      args:
+        chdir: "{{ services_path }}/nginx"

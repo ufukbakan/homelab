@@ -2,4 +2,5 @@
 - create user "ansible" on slave
 - make ansible user passwordless sudoer
 - ssh-copy-id ansible@slave-ip
+---
 - ansible-playbook -i hosts.ini ubuntu_install_docker.yml

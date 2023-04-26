@@ -1,0 +1,13 @@
+---
+- name: Create docker network
+  hosts: ubuntu
+  become: true
+
+  tasks:
+  - name: Create backnet network
+    ignore_errors: yes
+    command: docker network create --driver bridge backnet
+
+  - name: Create frontnet network
+    ignore_errors: yes
+    command: docker network create --driver host frontnet
