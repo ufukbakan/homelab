@@ -1,0 +1,29 @@
+version: '2'
+
+networks:
+  backnet:
+    external: true
+
+services:
+  gocd:
+    image: gocd/gocd-server:v23.1.0
+    volumes:
+      - gocd_data:/godata
+      - gocd_home:/home/go
+      - ../common/hosts:/etc/hosts
+      # port 8153
+    networks:
+      backnet:
+    mem_limit: 512m
+
+  agent01:
+    image: gocd/gocd-agent-alpine-3.17:v23.1.0
+    environment:
+      - GO_SERVER_URL=http://gocd:8153/go
+      - AGENT_AUTO_REGISTER_KEY=406ccba1-088c-4f6b-a626-9aac0b18bdc6
+      - AGENT_AUTO_REGISTER_HOSTNAME=agent01
+    mem_limit: 256m
+
+volumes:
+  gocd_data:
+  gocd_home:
