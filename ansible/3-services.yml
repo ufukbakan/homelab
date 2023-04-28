@@ -42,12 +42,6 @@
         src: ../gitea
         dest: "{{ services_path }}"
 
-    - name: Copy goCD service
-      become: true
-      copy:
-        src: ../gocd
-        dest: "{{ services_path }}"
-
     - name: Copy nginx service
       become: true
       copy:
@@ -59,12 +53,6 @@
       command: docker-compose up -d
       args:
         chdir: "{{ services_path }}/gitea"
-
-    - name: Start goCD container using docker-compose
-      become: true
-      command: docker-compose up -d
-      args:
-        chdir: "{{ services_path }}/gocd"
 
     - name: Start Nginx container using docker-compose
       become: true
