@@ -2,6 +2,7 @@ version: "2"
 services:
   nginx:
     image: nginx:stable-alpine-slim
+    mem_limit: 32m
     ports:
       - "80:80"
     volumes:
