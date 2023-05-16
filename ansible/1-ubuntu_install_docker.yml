@@ -38,3 +38,23 @@
         name: docker
         state: started
         enabled: yes
+
+    # Enable Docker Engine API:
+
+    - name: Open docker.service file for editing
+      become: true
+      lineinfile:
+        path: /lib/systemd/system/docker.service
+        regexp: '^ExecStart=/usr/bin/dockerd'
+        line: 'ExecStart=/usr/bin/dockerd -H=fd:// -H=tcp://0.0.0.0:2375'
+    
+    - name: Reload systemd configuration
+      become: true
+      systemd:
+        daemon_reload: yes
+        
+    - name: Restart Docker service
+      become: true
+      service:
+        name: docker
+        state: restarted
